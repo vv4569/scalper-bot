@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time 
-
+#use the local path of chorme_driver for tesing in local workspace
 service = Service(executable_path="C:\\Users\\kwchu\\Desktop\\IT\\Coding\\chromedriver-win64\\chromedriver.exe")
 driver = webdriver.Chrome(service=service)
 
