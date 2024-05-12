@@ -5,5 +5,9 @@ a ticket scalper by using python and javascript
 # 1 commit 27/4/2024 By Thomas
 * initialization of selenium
 
-# 1 commit 5/9/2024 By Thomas
+# 1 commit 9/5/2024 By Thomas
 * initialization of sql
+
+# 1 commit 12/5/2024 By Kelvin
+* Basic setup of sql
+* Generator of username and password (incomplete)
