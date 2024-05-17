@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from pathlib import Path
 from sqlalchemy import or_, and_
 from userindo_generator import random_name_pw
+from tqdm import tqdm
 
 
 Path("database") \
@@ -21,26 +22,31 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-#Struture of table.
-class User(Base):        
-    __tablename__ = 'users'            
+class User(Base):                       
+    __tablename__ = 'users'             
     id = Column(Integer, primary_key=True)
-    username = Column(String)           
+    username = Column(String)
+    gmail = Column(String)
     password = Column(String)
+    pin8 = Column(String)
 
 Base.metadata.create_all(bind=engine)
+session.query(User).delete()            #Emptying table. For testing purpose. Need to be removed
 
- #Emptying table. For testing purpose. Need to be removed
-session.query(User).delete()           
-
-for _ in range(int(input('Generate _ user(s). : '))): 
-    result = random_name_pw(username_digits=12, password_digits=12, requirement='both')
-    session.add(User(username=result[0], password=result[1]))
-    
+num_users: int = 0
+while True:
+    try:
+        num_users = int(input("Generate _ user(s).: "))
+        break  
+    except ValueError:
+        print("Invalid input. Please enter an integer.")
+for _ in tqdm(range(num_users)): 
+    result: list[str, str, str, str] = random_name_pw(username_digits=12, password_digits=12)
+    session.add(User(username=result[0], gmail=result[1], password=result[2], pin8=result[3]))
 session.commit()
 
 users = session.query(User).all()
 for user in users:
-    print(user.id, user.username, user.password)
+    print(user.id, user.username, user.gmail, user.password, user.pin8)
 
 session.close()
