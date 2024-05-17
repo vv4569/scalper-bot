@@ -1,12 +1,11 @@
-import random
-from typing import Literal
+from random import choice 
 
 alphabetUP = 'QWERTYUIOPASDFGHJKLZXCVBNM'
 alphabetLOW = 'qwertyuiopasdfghjklzxcvbnm'
 number = '1234567890'
 symbol = '!#$%_.+~`<>?'
 
-def random_name_pw(username_digits: str = 12, password_digits: str = 8, requirement: Literal['uppercase', 'symbol', 'both', None] = None) -> list[str, str]:
+def random_name_pw(username_digits: str = 12, password_digits: str = 8) -> list[str, str, str, str]:
     """
     Usage:
     Generate randomized username and password
@@ -14,26 +13,32 @@ def random_name_pw(username_digits: str = 12, password_digits: str = 8, requirem
     Arguments:
     username_digits: str = digits of randomized username. Defaults to 12.
     password_digits: str = digits of randomized password. Defaults to 8.
-    requirement: list = special requirement on password. Defaults to None.
 
     Return:
-    List[str, str] = [username, password]
+    List[str, str, str, str] = [username, gmail, password, pin8]
     """
-    char: str = alphabetUP + alphabetLOW + number + symbol
-    result: list[str, str] = ['', '']
-    match requirement:
-        case 'uppercase':
-            result = [random.choice(alphabetUP), random.choice(alphabetUP)]
-        case 'symbol':
-            result = [random.choice(symbol), random.choice(symbol)]
-        case 'both':
-            result = [random.choice(alphabetUP) + random.choice(symbol), random.choice(alphabetUP) + random.choice(symbol)]
-    
-    result[0] += ''.join([random.choice(char) for _ in range(username_digits-len(result[0])) ])
-    result[1] += ''.join([random.choice(char) for _ in range(password_digits-len(result[1])) ])
+    if not isinstance(username_digits, int) or not isinstance(password_digits, int): raise ValueError('username_digits and password_digits have to be integers.')
+    if username_digits < 4: raise ValueError('Value of username_digits cannot be less than 4.')
+    if password_digits < 8: raise ValueError('Value of password_digits cannot be less than 8.')
+
+    result: list[str, str, str, str] = ['', '', '', '']
+
+    result[0] = ''.join([choice(alphabetUP+alphabetLOW+number) for _ in range(username_digits)])
+    if username_digits >= 8:
+        result[1] = result[0]+'@gmail.com'
+    else:
+        result[1] = result[0]+''.join([choice(alphabetUP+alphabetLOW+number) for _ in range(8-username_digits)])+'@gmail.com'
+    result[2] = choice(alphabetUP)+choice(symbol)+choice(number)+''.join([choice(alphabetLOW) for _ in range(password_digits-3)])
+    result[3] = ''.join([choice(number) for _ in range(8)])
 
     return result
 
 
 if __name__ == "__main__":
-    print('Test:', random_name_pw())
+    test_case = [[12, 12], [8, 8], [4, 8], [1, 2], [4, 1], ['p', 9], [9, 'p'], ['p', 'p']]
+    for num, [ud, pd] in enumerate(test_case):
+        print(f'TEST CASE {num}:  ', end='')
+        try:
+            print(random_name_pw(ud, pd))
+        except Exception as e:
+            print(e)
