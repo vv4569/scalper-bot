@@ -13,4 +13,4 @@ a ticket scalper by using python and javascript
 * Generator of username and password (incomplete)
 
 # 1 commit 18/5/2024 By Kelvin
-*Complete user information generator
+* Complete user information generator
