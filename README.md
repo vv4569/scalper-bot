@@ -15,5 +15,5 @@ a ticket scalper by using python and javascript
 # 2 commit 18/5/2024 By Kelvin
 * Complete user information generator
 
-# 1 commit 19/5/2024
+# 1 commit 19/5/2024 By Kelvin
 * Imply gmail registration
