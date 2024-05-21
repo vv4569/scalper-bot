@@ -5,78 +5,65 @@ from time import sleep
 
 browser = webdriver.Chrome()
 
-#https://mail.google.com/mail/u/0/
+def Click(xpath: str) -> None: browser.find_element(By.XPATH, xpath).click()
+def Enter_value(xpath: str, message: str) -> None: browser.find_element(By.XPATH, xpath).send_keys(message)
+"""
+Usage:
+-Improve readability 
+-Facilitate future maintenance
 
-def gmail_registration(name: str, gmail_address: str, password: str, phone_no: str) -> bool:
+Arguements:
+-xpath: str = XPATH of target elements
+-message: str = value that we want to input into target elements
+
+Return: None
+"""
+
+
+
+def email_registration(name: str, password: str) -> bool:
+    """
+    Usage:
+    Register an email account on yahoo
+    
+    Arguments:
+    -name: str = username.
+    -password: str = password.
+    -phone_no: str = for verification of email registration.
+
+    Return:
+    bool = True for successfully register a yahoo mail account.
+    """
+
     try:
-        browser.get('https://mail.google.com/mail/u/0/')
+        browser.get('https://signup.live.com/signup?cobrandid=ab0455a0-8d03-46b9-b18b-df2f57b9e44c&id=292841&contextid=5DFEE81AF74CA019&opid=F02668710CDC4605&bk=1716244622&sru=https://login.live.com/login.srf%3fcobrandid%3dab0455a0-8d03-46b9-b18b-df2f57b9e44c%26id%3d292841%26cobrandid%3dab0455a0-8d03-46b9-b18b-df2f57b9e44c%26id%3d292841%26contextid%3d5DFEE81AF74CA019%26opid%3dF02668710CDC4605%26mkt%3dEN-US%26lc%3d1033%26bk%3d1716244622%26uaid%3d950d68cedbbd4eb6a285dfaf78db2f2e&uiflavor=web&lic=1&mkt=EN-US&lc=1033&uaid=950d68cedbbd4eb6a285dfaf78db2f2e')
+        Click('//*[@id="liveSwitch"]')
+        sleep(1)
 
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz/div/div[3]/div/div[2]/div/div/div[1]/div/button/span').click()
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz/div/div[3]/div/div[2]/div/div/div[2]/div/ul/li[1]').click()
-
-        #Enter name
-        browser.find_element(By.XPATH, '//*[@id="firstName"]').send_keys(name)
-        browser.find_element(By.XPATH, '//*[@id="collectNameNext"]/div/button').click()
-        sleep(5)
-        
-        #Enter birthday, gender
-        Select(browser.find_element(By.ID, 'month')).select_by_visible_text('April')
-        browser.find_element(By.XPATH, '//*[@id="day"]').send_keys('1')
-        browser.find_element(By.XPATH, '//*[@id="year"]').send_keys('2000')
-        Select(browser.find_element(By.ID, 'gender')).select_by_visible_text('Rather not say')
-        browser.find_element(By.XPATH, '//*[@id="birthdaygenderNext"]/div/button').click()
-        sleep(5)
-
-        #Enter gmail
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz/div/div[2]/div/div/div/form/span/section/div/div/div[1]/div[1]/div/span/div[3]/div/div[1]/div').click()
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz/div/div[2]/div/div/div/form/span/section/div/div/div[2]/div[1]/div/div[1]/div/div[1]/input').send_keys(name)
-        browser.find_element(By.XPATH, '//*[@id="next"]/div/button').click()
-        sleep(2)
-
-        #Enter password
-        browser.find_element(By.XPATH, '//*[@id="passwd"]/div[1]/div/div[1]/input').send_keys(password)
-        browser.find_element(By.XPATH, '//*[@id="confirm-passwd"]/div[1]/div/div[1]/input').send_keys(password)
-        browser.find_element(By.XPATH, '//*[@id="createpasswordNext"]/div/button').click()
+        Enter_value('//*[@id="MemberName"]', name)
+        Click('//*[@id="iSignupAction"]')
         sleep(3)
 
-        #Enter phone no., for verification
-        browser.find_element(By.XPATH, '//*[@id="phoneNumberId"]').send_keys(phone_no)
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/div[1]/div[1]/div[2]/div/div/div[3]/div/div[1]/div/div/button').click()
-        sleep(2)
+        Enter_value('//*[@id="PasswordInput"]', password)
+        Click('//*[@id="iSignupAction"]')
+        sleep(3)
 
-        #Enter verification code
-        v_code: str = ''
-        while True:
-            try:
-                v_code = input('Verification code: ')
-                break
-            except Exception as e:
-                print(e, '\e')
+        Enter_value('//*[@id="FirstName"]', name[:int(len(name)//2+1)])
+        Enter_value('//*[@id="LastName"]', name[int(len(name)//2):])
+        Click('//*[@id="iSignupAction"]')
+        sleep(5)
 
-        browser.find_element(By.XPATH, '//*[@id="code"]').send_keys(v_code)
-        browser.find_element(By.XPATH, '//*[@id="next"]/div/button').click()
-        sleep(2)
-
-        #Check
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/div[1]/div[1]/div[2]/div/div/div[3]/div/div[1]/div[2]/div/div/button').click()
-        sleep(2)
-
-        #User agreement 
-        browser.find_element(By.XPATH, '//*[@id="next"]/div/button').click()
-        sleep(2)
-
-        #End
-        browser.find_element(By.XPATH, '//*[@id="yDmH0d"]/c-wiz/div/div[3]/div/div[1]/div/div/button').click()
-
-        return True
+        Select(browser.find_element(By.XPATH, '//*[@id="BirthMonth"]')).select_by_visible_text('April')
+        Select(browser.find_element(By.XPATH, '//*[@id="BirthDay"]')).select_by_visible_text('1')
+        Enter_value('//*[@id="BirthYear"]', '2000')
+        Click('//*[@id="iSignupAction"]')
+        sleep(100)
     except Exception as e:
         print(e)
         return False
 
 
 if __name__ == '__main__':
-    name = '4k3ULnBuU1dD'
-    gmail = '4k3ULnBuU1dD@gmail.com'
-    password = 'R%6lbxlgbxdl'
-    phone_no = str(input('Phone number: '))
-    print(f'TEST: {gmail_registration(name, gmail, password, phone_no)}')
+    name = str(input('Username: '))         #Enter your own test case
+    password = str(input('Password: '))
+    print(f'TEST: {email_registration(name, password)}. Registering email {name}@myyahoo.com.')
