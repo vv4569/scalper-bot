@@ -22,3 +22,7 @@ a ticket scalper by using python and javascript
 * Complete email registration. Using Outlook.
 * Connect email registration, userinfo generator and db.py, the main workplace.
 * Basically finished the email registration part. Optimization left.
+
+# 3 commits 23/5/2024 By Kelvin
+* Completely finished the email registration part.
+* FYR. 36 seconds for 10 Outlook email registration. 33 seconds for 9 successful and 1 failed. 
