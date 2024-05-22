@@ -28,7 +28,7 @@ def random_name_pw(username_digits: str = 12, password_digits: str = 8) -> list[
     result[2] = choice(alphabetUP) + choice(symbol) + choice(number) + ''.join([choice(alphabetLOW) for _ in range(password_digits-3)])
     result[3] = ''.join([choice(number) for _ in range(8)])
     
-    if email_registration(name = result[0], password = result[1]) == True:
+    if email_registration(name = result[0], password = result[2]) == True:
         result[1] = result[0] + '@outlook.com'
 
     return result
