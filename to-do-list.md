@@ -4,3 +4,4 @@
 * implementation on proxies
 * keep working on selenium and sql
 * investigate the purchasing process on kktix
+* In the database, table 'User' column 'gmail' should be 'email'. Minor mistake.
