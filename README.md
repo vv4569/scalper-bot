@@ -25,4 +25,8 @@ a ticket scalper by using python and javascript
 
 # 3 commits 23/5/2024 By Kelvin
 * Completely finished the email registration part.
-* FYR. 36 seconds for 10 Outlook email registration. 33 seconds for 9 successful and 1 failed. 
+* FYR. 36 seconds for 10 Outlook email registration. 33 seconds for 9 successful and 1 failed.
+
+# 3 commits 29/5/2024 By Kelvin
+* Finalized email registration part
+* Outlook email registration require human validation, which need to complete manually.
