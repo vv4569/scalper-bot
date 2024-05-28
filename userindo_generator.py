@@ -9,14 +9,14 @@ symbol = '!#$%_.+~`<>?'
 def random_name_pw(username_digits: str = 12, password_digits: str = 8) -> list[str, str, str, str]:
     """
     Usage:
-    Generate randomized username and password.
+    -Generate randomized username and password.
 
     Arguments:
-    username_digits: str = digits of randomized username. Defaults to 12.
-    password_digits: str = digits of randomized password. Defaults to 8.
+    -username_digits: str = digits of randomized username. Defaults to 12.
+    -password_digits: str = digits of randomized password. Defaults to 8.
 
     Return:
-    List[str, str, str, str] = [username, gmail, password, pin8]
+    -List[str, str, str, str] = [username, gmail, password, pin8]
     """
     if not isinstance(username_digits, int) or not isinstance(password_digits, int): raise ValueError('username_digits and password_digits have to be integers.')
     if username_digits < 8: raise ValueError('Value of username_digits cannot be less than 8.')

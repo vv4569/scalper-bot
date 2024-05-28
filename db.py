@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy import create_engine, Column, String, Integer, Select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists
 from sqlalchemy.ext.declarative import declarative_base
@@ -22,8 +22,6 @@ engine = create_engine("sqlite:///database/main.db", echo=False)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
-failed: int = 0
-test_mode: bool = bool(int(input('Test mode (0 = False / 1 = True): ')))
 
 #Table format
 class User(Base):                       
@@ -36,32 +34,77 @@ class User(Base):
 
 Base.metadata.create_all(bind=engine)
 
-#Emptying table. For testing purpose. Need to be removed.
-session.query(User).delete()            
+def initialize_database() -> None:
+    """
+    Usage:
+    -Emptying table. For testing purpose. Need to be removed.
+    
+    Return:
+    -None
+    """
+    session.query(User).delete()            
 
-#Generate users.
-num_users: int = 0
-while True:
-    try:
-        num_users = int(input("Generate _ user(s).: "))
-        break  
-    except ValueError:
-        print("Invalid input. Please enter an integer.", end='\r')
+def generate_users() -> None: 
+    """
+    Usage:
+    -Generate users and insert to User
 
-for _ in tqdm(range(num_users)): 
-    result: list[str, str, str, str] = random_name_pw(username_digits=12, password_digits=12)
-    if result[1] == '':
-        failed += 1
-        continue
-    session.add(User(username=result[0], gmail=result[1], password=result[2], pin8=result[3]))
+    Return:
+    -None
+    """
+    failed: int = 0
+    num_users: int = 0
+    while True:
+        try:
+            num_users = int(input("Generate _ user(s).: "))
+            break  
+        except ValueError:
+            print("Invalid input. Please enter an integer.", end='\r')
 
-print(f'Successfully create {num_users-failed} Outlook mail account(s)....({num_users-failed}/{num_users})')
-session.commit()
+    for _ in tqdm(range(num_users)): 
+        result: list[str, str, str, str] = random_name_pw(username_digits=12, password_digits=12)
+        if result[1] == '':
+            failed += 1
+            continue
+        session.add(User(username=result[0], gmail=result[1], password=result[2], pin8=result[3]))
 
-#Show output.
-if test_mode:           
-    users = session.query(User).all()
-    for user in users:
-        print(user.id, user.username, user.gmail, user.password, user.pin8)
+    print(f'Successfully create {num_users-failed} Outlook mail account(s)....({num_users-failed}/{num_users})')
+    session.commit()
 
-session.close()
+def show_content() -> list:
+    """
+    Usage:
+    -show content of database, i.e. User
+    
+    Return:
+    -list = content of database. Line by line.
+    """
+    stmt = Select('*').select_from(User)
+    result = session.execute(stmt).fetchall()
+    
+    return result
+
+
+
+if __name__ == '__main__' :
+    command: list = [show_content, generate_users, initialize_database]
+    index: int = 0
+    while True:
+        index = int(input("""
+Command:
+0: Show content
+1: Generate users
+2: Initialize database
+3: exit
+input: """))
+        if index not in [0, 1, 2]: break
+        match index:
+            case 0:
+                [print(row) for row in command[index]()]
+            case 1:
+                command[index]()
+            case 2:
+                #Avoid mistakenly input 2
+                if str(input('Delete all user information. (T/F): ')) in 'Tt': command[index]()
+                
+        print('-'*50)
