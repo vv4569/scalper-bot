@@ -90,14 +90,17 @@ if __name__ == '__main__' :
     command: list = [show_content, generate_users, initialize_database]
     index: int = 0
     while True:
-        index = int(input("""
+        index = input("""
 Command:
 0: Show content
 1: Generate users
 2: Initialize database
 3: exit
-input: """))
-        if index not in [0, 1, 2]: break
+input: """)
+        try:
+            index = int(index)
+        except:
+            index = -1
         match index:
             case 0:
                 [print(row) for row in command[index]()]
@@ -106,5 +109,10 @@ input: """))
             case 2:
                 #Avoid mistakenly input 2
                 if str(input('Delete all user information. (T/F): ')) in 'Tt': command[index]()
+            case 3:
+                print('QUIT.')
+                break
+            case _:
+                print('Invalid input.')
                 
         print('-'*50)
