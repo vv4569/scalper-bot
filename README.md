@@ -30,3 +30,6 @@ a ticket scalper by using python and javascript
 # 3 commits 29/5/2024 By Kelvin
 * Finalized email registration part
 * Outlook email registration require human validation, which need to complete manually.
+
+# 1 commits 5/6/2024 By Kelvin
+* Started kktix registration part
