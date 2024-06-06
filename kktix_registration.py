@@ -1,11 +1,5 @@
-from selenium import webdriver
-from email_registration import ShortenExpression
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select, WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from time import sleep
-
+from DrissionPage import ChromiumPage, ChromiumOptions
 
 
 """
@@ -22,9 +16,8 @@ from time import sleep
 //*[@id="signup-btn"]
 """
 
-option = webdriver.ChromeOptions()
-option.add_experimental_option('excludeSwitches', ['enable-logging'])
-option.add_argument('--log-level=3')
+
+
 
 def kktix_registration(name: str, email: str, password: str) -> bool:
     """
@@ -39,34 +32,35 @@ def kktix_registration(name: str, email: str, password: str) -> bool:
     Return:
     -bool -> represent whether kktix 
     """
-    browser = webdriver.Chrome(options=option)
-    screen_width = browser.execute_script("return screen.width;")
-    screen_height = browser.execute_script("return screen.height;")
+    co = ChromiumOptions()
+    co.incognito(True)
+    browser = ChromiumPage(addr_or_opts=co)
 
-    browser.set_window_size(screen_width//2, screen_height)
-    browser.set_window_position(screen_width//2, 0)
-
-    wait = WebDriverWait(browser, 300)
-    s = ShortenExpression(browser, wait)
     try:
         browser.get('https://kktix.com/users/sign_up?back_to=https%3A%2F%2Fkktix.com%2F')
 
-        s.Enter_value(xpath='//*[@id="user_login"]', message=name)
-        s.Enter_value(xpath='//*[@id="user_email"]', message=email)
-        s.Enter_value(xpath='//*[@id="user_password"]', message=password)
-        s.Enter_value(xpath='//*[@id="user_password_confirmation"]', message=password)
-        s.Enter_value(xpath='//*[@id="user_birthdate"]', message='2000-04-01')
-        s.Enter_value(xpath='//*[@id="user_birthdate"]', message=Keys.TAB)
-        s.Click(xpath='//*[@id="new_user"]/div[6]/div/div/button')
-        s.Wait(xpath='//*[@id="new_user"]/div[6]/div/div/div/ul/li[2]/a/span[1]')
-        s.Click(xpath='//*[@id="new_user"]/div[6]/div/div/div/ul/li[2]/a/span[1]')
-        s.Click(xpath='//*[@id="user_frequents_regions"]/div/div/button')
-        s.Wait(xpath='//*[@id="user_frequents_regions"]/div/div/div/ul/li[8]/label/input')
-        s.Click(xpath='//*[@id="user_frequents_regions"]/div/div/div/ul/li[8]/label/input')
-        sleep(30)
-        #s.Click(xpath='//*[@id="challenge-stage"]/div/label/input')
-        #s.Click(xpath='//*[@id="signup-btn"]')
-        #Need to determine whether given informetion are able to register
+        browser.ele('@id:user_login').input(name)
+        browser.ele('@id:user_email').input(email)
+        browser.ele('@id:user_password').input(password)
+        browser.ele('@id:user_password_confirmation').input(password)
+        browser.ele('@id:user_birthdate').input('2000-04-01')
+        browser.ele('xpath://*[@id="new_user"]/div[3]/div').click()
+        browser.ele('xpath://*[@id="new_user"]/div[6]/div/div/button').click()
+        browser.ele('xpath://*[@id="new_user"]/div[6]/div/div/div/ul/li[2]/a/span[1]').click()
+        browser.ele('xpath://*[@id="user_frequents_regions"]/div/div/button').click()
+        browser.ele('xpath://*[@id="user_frequents_regions"]/div/div/div/ul/li[8]/label/input').click()
+        browser.ele('xpath://*[@id="user_frequents_regions"]/div/div/button/span[2]/span').click()
+
+        browser.wait(1)
+
+        browser.ele('xpath://*[@id="signup-btn"]').click()
+        try :
+            print(email, browser.ele('xpath://*[@id="new_user"]/div[1]/div/span').text)
+            return False
+        except:
+            if browser.ele('xpath://*[@id="stickies"]/div').text != "×System is busy. Please retry later!":
+                browser.quit()
+                return True
         return False
     except Exception as e:
         print(e)
@@ -74,8 +68,8 @@ def kktix_registration(name: str, email: str, password: str) -> bool:
     
 
 if __name__ == '__main__':
-    name = 'h5xqQ6LJYDAk'
-    email = 'h5xqQ6LJYDAk@outlook.com'
-    password = 'E`4ysrkktifh'
+    name = input('name: ')
+    email = input('email: ')
+    password = input('password: ')
     print(kktix_registration(name, email, password)) 
 
