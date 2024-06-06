@@ -30,6 +30,11 @@ a ticket scalper by using python and javascript
 # 3 commits 29/5/2024 By Kelvin
 * Finalized email registration part
 * Outlook email registration require human validation, which need to complete manually.
+* Have not check yet, due to busy server.
 
-# 1 commits 5/6/2024 By Kelvin
+# 1 commit 5/6/2024 By Kelvin
 * Started kktix registration part
+
+# 1 commit 7/6/2024 By Kelvin
+* Updated kktix registration part
+* Used DrissionPage for bypassing cloudfare test and succeed
