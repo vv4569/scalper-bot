@@ -1,29 +1,22 @@
-from sqlalchemy import create_engine, Column, String, Integer, Select
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import exists
+from sqlalchemy import create_engine, Column, String, Integer, select
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 from pathlib import Path
-from sqlalchemy import or_, and_
-from userindo_generator import random_name_pw
+from userinfo_generator import random_name_pw
 from tqdm import tqdm
 
-
-Path("database") \
-    .mkdir(exist_ok=True)
+Path("database").mkdir(exist_ok=True)
 
 # "database/main.db" specifies the database file
 # change it if you wish
 # turn echo = True to display the sql output
 engine = create_engine("sqlite:///database/main.db", echo=False)
 
-# initializes the database
-
-#Basic setup
+# Basic setup
 Base = declarative_base()
-Session = sessionmaker(bind=engine)
-session = Session()
+SessionLocal = sessionmaker(bind=engine)
 
-#Table format
+# Table format
 class User(Base):                       
     __tablename__ = 'users'             
     id = Column(Integer, primary_key=True)
@@ -34,24 +27,17 @@ class User(Base):
 
 Base.metadata.create_all(bind=engine)
 
+def get_gmail():
+    with SessionLocal() as session:
+        users = session.query(User).all()
+        return users
+
 def initialize_database() -> None:
-    """
-    Usage:
-    -Emptying table. For testing purpose. Need to be removed.
-    
-    Return:
-    -None
-    """
-    session.query(User).delete()            
+    with SessionLocal() as session:
+        session.query(User).delete()
+        session.commit()
 
 def generate_users() -> None: 
-    """
-    Usage:
-    -Generate users and insert to User
-
-    Return:
-    -None
-    """
     failed: int = 0
     num_users: int = 0
     while True:
@@ -61,32 +47,24 @@ def generate_users() -> None:
         except ValueError:
             print("Invalid input. Please enter an integer.", end='\r')
 
-    for _ in tqdm(range(num_users)): 
-        result: list[str, str, str, str] = random_name_pw(username_digits=12, password_digits=12)
-        if result[1] == '':
-            failed += 1
-            continue
-        session.add(User(username=result[0], gmail=result[1], password=result[2], pin8=result[3]))
+    with SessionLocal() as session:
+        for _ in tqdm(range(num_users)): 
+            result: list[str, str, str, str] = random_name_pw(username_digits=12, password_digits=12)
+            if result[1] == '':
+                failed += 1
+                continue
+            session.add(User(username=result[0], gmail=result[1], password=result[2], pin8=result[3]))
 
-    print(f'Successfully create {num_users-failed} Outlook mail account(s)....({num_users-failed}/{num_users})')
-    session.commit()
+        print(f'Successfully created {num_users-failed} Outlook mail account(s)....({num_users-failed}/{num_users})')
+        session.commit()
 
 def show_content() -> list:
-    """
-    Usage:
-    -show content of database, i.e. User
-    
-    Return:
-    -list = content of database. Line by line.
-    """
-    stmt = Select('*').select_from(User)
-    result = session.execute(stmt).fetchall()
-    
-    return result
+    with SessionLocal() as session:
+        stmt = select(User)
+        result = session.execute(stmt).fetchall()
+        return result
 
-
-
-if __name__ == '__main__' :
+if __name__ == '__main__':
     command: list = [show_content, generate_users, initialize_database]
     index: int = 0
     while True:
@@ -107,7 +85,6 @@ input: """)
             case 1:
                 command[index]()
             case 2:
-                #Avoid mistakenly input 2
                 if str(input('Delete all user information. (T/F): ')) in 'Tt': command[index]()
             case 3:
                 print('QUIT.')

@@ -38,3 +38,6 @@ a ticket scalper by using python and javascript
 # 1 commit 7/6/2024 By Kelvin
 * Updated kktix registration part
 * Used DrissionPage for bypassing cloudfare test and succeed
+
+# 1 commit 20/6/2024 By Thomas
+* added a feature for attempting to login all the accounts in database
