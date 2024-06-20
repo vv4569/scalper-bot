@@ -6,7 +6,6 @@ import db
 
 # Function to log in using the credentials
 def login(email, password):
-    # Use the local path of chromedriver for testing in local workspace
     service = Service(executable_path="C:\\Users\\kwchu\\Desktop\\IT\\Coding\\chromedriver-win64\\chromedriver.exe")
     driver = webdriver.Chrome(service=service)
 
@@ -17,7 +16,7 @@ def login(email, password):
         email_div = driver.find_element(By.CLASS_NAME, 'control-group.string.required.user_login')
         password_div = driver.find_element(By.CLASS_NAME, 'control-group.password.required.user_password')
 
-        # The actual input fields are likely inside these divs, so find them
+        # Find The actual input fields from div class
         email_field = email_div.find_element(By.TAG_NAME, 'input')
         password_field = password_div.find_element(By.TAG_NAME, 'input')
 
@@ -28,7 +27,7 @@ def login(email, password):
         login_button = driver.find_element(By.NAME, 'commit')
         login_button.click()
 
-        # Optionally, wait for some time to observe the result
+        # some time to observe the result
         time.sleep(5)
     finally:
         driver.quit()
