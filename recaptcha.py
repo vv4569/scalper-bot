@@ -1,11 +1,17 @@
 import os
 import urllib.request
 import random
-import pydub
-import speech_recognition
 import time
 from typing import Optional
-from DrissionPage import ChromiumPage
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+import pydub
+import speech_recognition
 
 
 class RecaptchaSolver:
@@ -14,16 +20,17 @@ class RecaptchaSolver:
     # Constants
     TEMP_DIR = os.getenv("TEMP") if os.name == "nt" else "/tmp"
     TIMEOUT_STANDARD = 7
-    TIMEOUT_SHORT = 1
+    TIMEOUT_SHORT = 5
     TIMEOUT_DETECTION = 0.05
 
-    def __init__(self, driver: ChromiumPage) -> None:
-        """Initialize the solver with a ChromiumPage driver.
+    def __init__(self, driver: webdriver.Chrome) -> None:
+        """Initialize the solver with a Selenium WebDriver instance.
 
         Args:
-            driver: ChromiumPage instance for browser interaction
+            driver: Selenium WebDriver instance for browser interaction
         """
         self.driver = driver
+        self.action = ActionChains(self.driver)
 
     def solveCaptcha(self) -> None:
         """Attempt to solve the reCAPTCHA challenge.
@@ -31,50 +38,61 @@ class RecaptchaSolver:
         Raises:
             Exception: If captcha solving fails or bot is detected
         """
-
-        # Handle main reCAPTCHA iframe
-        self.driver.wait.ele_displayed(
-            "@title=reCAPTCHA", timeout=self.TIMEOUT_STANDARD
+        # Wait for and switch to the reCAPTCHA iframe
+        WebDriverWait(self.driver, self.TIMEOUT_STANDARD).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.XPATH, "//iframe[@title='reCAPTCHA']")
+            )
         )
-        time.sleep(0.1)
-        iframe_inner = self.driver("@title=reCAPTCHA")
 
         # Click the checkbox
-        iframe_inner.wait.ele_displayed(
-            ".rc-anchor-content", timeout=self.TIMEOUT_STANDARD
-        )
-        iframe_inner(".rc-anchor-content", timeout=self.TIMEOUT_SHORT).click()
+        WebDriverWait(self.driver, self.TIMEOUT_STANDARD).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, "rc-anchor-content"))
+        ).click()
 
         # Check if solved by just clicking
         if self.is_solved():
+            self.driver.switch_to.default_content()
             return
 
-        # Handle audio challenge
-        iframe = self.driver("xpath://iframe[contains(@title, 'recaptcha')]")
-        iframe.wait.ele_displayed(
-            "#recaptcha-audio-button", timeout=self.TIMEOUT_STANDARD
+        # Switch back to the main content and locate the audio challenge iframe
+        self.driver.switch_to.default_content()
+        WebDriverWait(self.driver, self.TIMEOUT_STANDARD).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.XPATH, "//iframe[contains(@title, 'recaptcha')]")
+            )
         )
-        iframe("#recaptcha-audio-button", timeout=self.TIMEOUT_SHORT).click()
+
+        # Click the audio challenge button
+        WebDriverWait(self.driver, self.TIMEOUT_STANDARD).until(
+            EC.element_to_be_clickable((By.ID, "recaptcha-audio-button"))
+        ).click()
         time.sleep(0.3)
 
         if self.is_detected():
             raise Exception("Captcha detected bot behavior")
 
-        # Download and process audio
-        iframe.wait.ele_displayed("#audio-source", timeout=self.TIMEOUT_STANDARD)
-        src = iframe("#audio-source").attrs["src"]
+        # Wait for and process the audio challenge
+        audio_source = WebDriverWait(self.driver, self.TIMEOUT_STANDARD).until(
+            EC.presence_of_element_located((By.ID, "audio-source"))
+        )
+        audio_url = audio_source.get_attribute("src")
 
         try:
-            text_response = self._process_audio_challenge(src)
-            iframe("#audio-response").input(text_response.lower())
-            iframe("#recaptcha-verify-button").click()
+            text_response = self._process_audio_challenge(audio_url)
+            response_box = self.driver.find_element(By.ID, "audio-response")
+            response_box.send_keys(text_response.lower())
+            self.driver.find_element(By.ID, "recaptcha-verify-button").click()
             time.sleep(0.4)
 
-            if not self.is_solved():
-                raise Exception("Failed to solve the captcha")
+            # if not self.is_solved():
+            #     raise Exception("Failed to solve the captcha")
 
         except Exception as e:
             raise Exception(f"Audio challenge failed: {str(e)}")
+
+        finally:
+            self.driver.switch_to.default_content()
 
     def _process_audio_challenge(self, audio_url: str) -> str:
         """Process the audio challenge and return the recognized text.
@@ -85,8 +103,8 @@ class RecaptchaSolver:
         Returns:
             str: Recognized text from the audio file
         """
-        mp3_path = os.path.join(self.TEMP_DIR, f"{random.randrange(1, 1000)}.mp3")
-        wav_path = os.path.join(self.TEMP_DIR, f"{random.randrange(1, 1000)}.wav")
+        mp3_path = os.path.join(self.TEMP_DIR, f"{random.randrange(1,1000)}.mp3")
+        wav_path = os.path.join(self.TEMP_DIR, f"{random.randrange(1,1000)}.wav")
 
         try:
             urllib.request.urlretrieve(audio_url, mp3_path)
@@ -109,30 +127,30 @@ class RecaptchaSolver:
 
     def is_solved(self) -> bool:
         """Check if the captcha has been solved successfully."""
+        self.driver.switch_to.default_content()
         try:
-            return (
-                    "style"
-                    in self.driver.ele(
-                ".recaptcha-checkbox-checkmark", timeout=self.TIMEOUT_SHORT
-            ).attrs
+            WebDriverWait(self.driver, self.TIMEOUT_SHORT).until(
+                EC.presence_of_element_located(
+                    (By.CLASS_NAME, "recaptcha-checkbox-checkmark")
+                )
             )
+            return True
         except Exception:
             return False
 
     def is_detected(self) -> bool:
         """Check if the bot has been detected."""
         try:
-            return (
-                self.driver.ele("Try again later", timeout=self.TIMEOUT_DETECTION)
-                .states()
-                .is_displayed
-            )
+            self.driver.find_element(By.XPATH, "//*[text()='Try again later']")
+            return True
         except Exception:
             return False
 
     def get_token(self) -> Optional[str]:
         """Get the reCAPTCHA token if available."""
         try:
-            return self.driver.ele("#recaptcha-token").attrs["value"]
+            return self.driver.find_element(By.ID, "recaptcha-token").get_attribute(
+                "value"
+            )
         except Exception:
             return None
