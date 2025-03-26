@@ -297,8 +297,8 @@ def handle_registration_page(driver):
 
 # Main function to run the ticket buying process
 def main():
-    email = ""
-    password = ""
+    email = "wongkelvin962@gmail.com"
+    password = "qwer1234"
     driver = None
 
     try:
