@@ -2,6 +2,9 @@
 a ticket scalper by using python and javascript
 - author: Thomas, Kelvin
 
+# 1 commit 26/3/2025 By Thomas 
+* added a new feature that can search and et into ticket area page also refactor our code
+
 # 1 commit 27/4/2024 By Thomas
 * initialization of selenium
 
