@@ -56,9 +56,9 @@ def initialize_driver():
 def simulate_human_behavior(driver):
     # Random scroll
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(random.uniform(0.5, 1.5))
+    time.sleep(random.uniform(0.1, 0.2))
     driver.execute_script("window.scrollTo(0, 0);")
-    time.sleep(random.uniform(0.5, 1.5))
+    time.sleep(random.uniform(0.1, 0.2))
 
     # Random mouse movement
     action = ActionChains(driver)
@@ -71,13 +71,13 @@ def force_page_load(driver):
     # Scroll multiple times to trigger lazy loading
     for _ in range(5):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(random.uniform(1, 2))
+        time.sleep(random.uniform(0.1, 0.2))
         driver.execute_script("window.scrollTo(0, 0);")
-        time.sleep(random.uniform(0.5, 1))
+        time.sleep(random.uniform(0.1, 0.2))
 
     # Force any remaining JavaScript to execute
     driver.execute_script("window.dispatchEvent(new Event('load'));")
-    time.sleep(2)
+    time.sleep(0.01)
 
 
 # Function to log in to KKTIX
@@ -149,7 +149,7 @@ def handle_event_page(driver):
             # Try to find the "Buy Now" (立即購票) button
             logger.info("Looking for 'Buy Now' (立即購票) button...")
             buy_now_button = WebDriverWait(driver, 2).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "#order-now a"))
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "#order-no21w a"))
             )
             href = buy_now_button.get_attribute("href")
             logger.info(f"Found 'Buy Now' button with href: {href}")
