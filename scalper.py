@@ -23,10 +23,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Configuration
-PREFERRED_TICKET_TYPE = "HK$980 VIP"  # Preferred ticket type (e.g., 'HK$980 VIP' or 'HK$780')
+PREFERRED_TICKET_TYPE = "$520＋$28行政費用"  # Preferred ticket type (e.g., 'HK$980 VIP' or 'HK$780')
 TICKET_QUANTITY = "1"  # Number of tickets to purchase (e.g., '1', '2', etc.)
 MAX_RELOAD_ATTEMPTS = 350000  # Max reloads (covers 4 days: 350,000 x ~1 second)
-EVENT_URL = "https://edproduction.kktix.cc/events/chiaifujikawa-livetour-hk-2025"
+EVENT_URL = "https://kkboxhk.kktix.cc/events/laiying-kkbox"
 LOGIN_URL = "https://kktix.com/users/sign_in?back_to=https%3A%2F%2Fkktix.com%2F"
 
 
@@ -326,6 +326,12 @@ def main():
             logger.info("Browser will remain open for manual intervention. Close it when done.")
             # Uncomment the line below to close the browser automatically
             # driver.quit()
+
+            try:
+                while True:
+                    time.sleep(1)  # Keep the program running
+            except KeyboardInterrupt:
+                driver.quit()
 
 
 if __name__ == "__main__":
