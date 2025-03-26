@@ -813,3 +813,62 @@ Stacktrace:
 
 2025-03-26 19:16:03,289 - ERROR - Failed to complete ticket selection on registration page.
 2025-03-26 19:16:03,289 - INFO - Browser will remain open for manual intervention. Close it when done.
+2025-03-26 20:44:06,103 - WARNING - Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
+2025-03-26 20:44:07,541 - INFO - Navigating to login page...
+2025-03-26 20:44:15,474 - INFO - Filling in login credentials...
+2025-03-26 20:44:26,623 - ERROR - Login failed: Timeout waiting for elements - Message: 
+
+2025-03-26 20:44:26,623 - ERROR - Script failed: Message: 
+
+2025-03-26 20:44:26,623 - INFO - Browser will remain open for manual intervention. Close it when done.
+2025-03-26 20:44:56,685 - INFO - Navigating to login page...
+2025-03-26 20:45:04,550 - INFO - Filling in login credentials...
+2025-03-26 20:45:06,926 - INFO - Login successful!
+2025-03-26 20:45:06,927 - INFO - Navigating to event page: https://edproduction.kktix.cc/events/chiaifujikawa-livetour-hk-2025
+2025-03-26 20:45:33,367 - INFO - Event page loaded, searching for buttons...
+2025-03-26 20:45:33,383 - INFO - Looking for 'Buy Now' (立即購票) button...
+2025-03-26 20:45:33,413 - INFO - Found 'Buy Now' button with href: https://kktix.com/events/chiaifujikawa-livetour-hk-2025/registrations/new
+2025-03-26 20:45:35,046 - INFO - Navigating to registration page...
+2025-03-26 20:45:35,046 - INFO - On registration page, selecting ticket type and quantity...
+2025-03-26 20:45:35,047 - ERROR - Error on registration page: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=134.0.6998.165)
+Stacktrace:
+	GetHandleVerifier [0x00007FF73B624C25+3179557]
+	(No symbol) [0x00007FF73B2888A0]
+	(No symbol) [0x00007FF73B1191CA]
+	(No symbol) [0x00007FF73B0F1753]
+	(No symbol) [0x00007FF73B19F83E]
+	(No symbol) [0x00007FF73B1BFBE2]
+	(No symbol) [0x00007FF73B197A03]
+	(No symbol) [0x00007FF73B1606D0]
+	(No symbol) [0x00007FF73B161983]
+	GetHandleVerifier [0x00007FF73B6867CD+3579853]
+	GetHandleVerifier [0x00007FF73B69D1D2+3672530]
+	GetHandleVerifier [0x00007FF73B692153+3627347]
+	GetHandleVerifier [0x00007FF73B3F092A+868650]
+	(No symbol) [0x00007FF73B292FFF]
+	(No symbol) [0x00007FF73B28F4A4]
+	(No symbol) [0x00007FF73B28F646]
+	(No symbol) [0x00007FF73B27EAA9]
+	BaseThreadInitThunk [0x00007FFE5BAC259D+29]
+	RtlUserThreadStart [0x00007FFE5DB2AF38+40]
+
+2025-03-26 20:45:35,047 - ERROR - Failed to complete ticket selection on registration page.
+2025-03-26 20:45:35,047 - INFO - Browser will remain open for manual intervention. Close it when done.
+2025-03-26 20:46:27,911 - INFO - Navigating to login page...
+2025-03-26 20:46:35,993 - INFO - Filling in login credentials...
+2025-03-26 20:46:38,064 - INFO - Login successful!
+2025-03-26 20:46:38,064 - INFO - Navigating to event page: https://kklivehk.kktix.cc/events/tangsiuhau-imherelive2025
+2025-03-26 20:46:50,108 - INFO - Event page loaded, searching for buttons...
+2025-03-26 20:46:50,125 - INFO - Looking for 'Buy Now' (立即購票) button...
+2025-03-26 20:46:52,167 - INFO - 'Buy Now' button not found, looking for 'Next Step' (下一步) button...
+2025-03-26 20:46:52,182 - INFO - Found 2 potential buttons leading to /registrations/new.
+2025-03-26 20:46:52,210 - INFO - Button 1: href=https://kktix.com/events/tangsiuhau-imherelive2025-0405/registrations/new, text=Next Step
+2025-03-26 20:46:52,223 - INFO - Button 2: href=https://kktix.com/events/tangsiuhau-imherelive2025-0406/registrations/new, text=Next Step
+2025-03-26 20:46:52,235 - INFO - Selected 'Next Step' button with href: https://kktix.com/events/tangsiuhau-imherelive2025-0405/registrations/new
+2025-03-26 20:46:59,854 - INFO - Navigating to registration page...
+2025-03-26 20:46:59,854 - INFO - On registration page, selecting ticket type and quantity...
+2025-03-26 20:46:59,923 - ERROR - Preferred ticket type 'HK$980 VIP' not found. Available ticket types: ['A - $780', 'B - $580', 'C - $480']
+2025-03-26 20:46:59,924 - ERROR - Failed to complete ticket selection on registration page.
+2025-03-26 20:46:59,924 - INFO - Browser will remain open for manual intervention. Close it when done.

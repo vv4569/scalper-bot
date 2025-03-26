@@ -5,6 +5,7 @@ a ticket scalper by using python and javascript
 # 1 commit 26/3/2025 By Thomas 
 * added a new feature that can search and et into ticket area page also refactor our code
 * bug fixed(but looks weird)
+* enhance the performance on searching button
 
 # 1 commit 27/4/2024 By Thomas
 * initialization of selenium
